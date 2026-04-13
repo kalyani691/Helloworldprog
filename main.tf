@@ -9,14 +9,14 @@ provider "aws" {
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "main-vpc-hemanthfinal"
+    Name = "main-vpc-kalyanifinal"
   }
 }
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
   tags = {
-    Name = "main-gateway-hemanthfinal"
+    Name = "main-gateway-kalyanifinal"
   }
 }
 
@@ -26,7 +26,7 @@ resource "aws_subnet" "public_1" {
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
   tags = {
-    Name = "public-subnet-1-hemanthfinal"
+    Name = "public-subnet-1-kalyanifinal"
   }
 }
 
@@ -36,7 +36,7 @@ resource "aws_subnet" "public_2" {
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
-    Name = "public-subnet-2-hemanthfinal"
+    Name = "public-subnet-2-kalyanifinal"
   }
 }
 
@@ -49,7 +49,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "public-route-table-hemanthfinal"
+    Name = "public-route-table-kalyanifinal"
   }
 }
 
@@ -102,7 +102,7 @@ resource "aws_ecs_cluster" "main" {
 # -------------------------
 
 resource "aws_iam_role" "ecs_task_exec_role" {
-  name = "ecsTaskExecutionRole-hemanth"
+  name = "ecsTaskExecutionRole-kalyani"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -164,7 +164,7 @@ resource "null_resource" "docker_build_and_push_patient_service" {
 # -------------------------
 
 resource "aws_ecs_task_definition" "appointment_service_task" {
-  family                   = "appointment-phk-task"
+  family                   = "appointment-kalyani-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -172,7 +172,7 @@ resource "aws_ecs_task_definition" "appointment_service_task" {
   execution_role_arn       = aws_iam_role.ecs_task_exec_role.arn
 
   container_definitions = jsonencode([{
-    name  = "appointment-phk-container",
+    name  = "appointment-kalyani-container",
     image = "${aws_ecr_repository.appointment_service.repository_url}:latest",
     portMappings = [{
       containerPort = 3001,
@@ -184,7 +184,7 @@ resource "aws_ecs_task_definition" "appointment_service_task" {
 }
 
 resource "aws_ecs_task_definition" "patient_service_task" {
-  family                   = "patient-phk-task"
+  family                   = "patient-kalyani-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -192,7 +192,7 @@ resource "aws_ecs_task_definition" "patient_service_task" {
   execution_role_arn       = aws_iam_role.ecs_task_exec_role.arn
 
   container_definitions = jsonencode([{
-    name  = "patient-phk-container",
+    name  = "patient-kalyani-container",
     image = "${aws_ecr_repository.patient_service.repository_url}:latest",
     portMappings = [{
       containerPort = 3002,
@@ -216,7 +216,7 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_target_group" "appointment_service_tg" {
-  name        = "phk-appointment-tg"
+  name        = "kalyani-appointment-tg"
   port        = 3001
   protocol    = "HTTP"
   target_type = "ip"
@@ -263,7 +263,7 @@ resource "aws_lb_listener_rule" "patient_service_rule" {
 # -------------------------
 
 resource "aws_ecs_service" "appointment_service" {
-  name            = "appointment-phk"
+  name            = "appointment-kalyani"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.appointment_service_task.arn
   desired_count   = 2
@@ -283,7 +283,7 @@ resource "aws_ecs_service" "appointment_service" {
 }
 
 resource "aws_ecs_service" "patient_service" {
-  name            = "patient-phk"
+  name            = "patient-kalyani"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.patient_service_task.arn
   desired_count   = 2
@@ -297,7 +297,7 @@ resource "aws_ecs_service" "patient_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.patient_service_tg.arn
-    container_name   = "patient-phk-container"
+    container_name   = "patient-kalyani-container"
     container_port   = 3002
   }
 }
