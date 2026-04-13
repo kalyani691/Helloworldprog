@@ -11,10 +11,10 @@ phases:
     commands:
       - echo Building project...
       - npm run build
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 539935451710.dkr.ecr.us-east-1.amazonaws.com
-      - docker build -t phk_app1 .
-      - docker tag phk_app:latest 539935451710.dkr.ecr.us-east-1.amazonaws.com/phk_app1:latest
-      - docker push 539935451710.dkr.ecr.us-east-1.amazonaws.com/phk_app1:latest
+      #- aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 539935451710.dkr.ecr.eu-north-1.amazonaws.com
+      #- docker build -t kalyani_app1 .
+      #- docker tag kalyani_app:latest 539935451710.dkr.ecr.us-east-1.amazonaws.com/kalyani_app1:latest
+      #- docker push 539935451710.dkr.ecr.eu-north-1.amazonaws.com/kalyani_app1:latest
   post_build:
     commands:
       - echo Build completed successfully!
