@@ -1,6 +1,6 @@
 variable "aws_region" {
   type    = string
-  default = "ap-south-1"
+  default = "eu-north-1"
 }
 
 variable "lambda_name" {
